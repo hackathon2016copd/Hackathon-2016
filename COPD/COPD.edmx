@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="COPDModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Während der Generierung sind Fehler aufgetreten:
+Warnung 6005: Der Datentyp 'sql_variant' wird derzeit für die Entity Framework-Zielversion nicht unterstützt. Die Spalte 'Wert' in der Tabelle 'Streckenpferde.dbo.Messdaten' wurde ausgeschlossen.-->
+        <EntityType Name="Messdaten">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FK_MesstypID" Type="int" Nullable="false" />
+          <Property Name="FK_PatientID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Messtypen">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TypName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Zeitintervall" Type="int" />
+        </EntityType>
+        <EntityType Name="Patienten">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Vorname" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Nachname" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Geburtsdatum" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Messdaten_Patienten">
+          <End Role="Patienten" Type="Self.Patienten" Multiplicity="1" />
+          <End Role="Messdaten" Type="Self.Messdaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patienten">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Messdaten">
+              <PropertyRef Name="FK_PatientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Table_Messtypen">
+          <End Role="Messtypen" Type="Self.Messtypen" Multiplicity="1" />
+          <End Role="Messdaten" Type="Self.Messdaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Messtypen">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Messdaten">
+              <PropertyRef Name="FK_MesstypID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="COPDModelStoreContainer">
+          <EntitySet Name="Messdaten" EntityType="Self.Messdaten" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Messtypen" EntityType="Self.Messtypen" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Patienten" EntityType="Self.Patienten" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Messdaten_Patienten" Association="Self.FK_Messdaten_Patienten">
+            <End Role="Patienten" EntitySet="Patienten" />
+            <End Role="Messdaten" EntitySet="Messdaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Table_Messtypen" Association="Self.FK_Table_Messtypen">
+            <End Role="Messtypen" EntitySet="Messtypen" />
+            <End Role="Messdaten" EntitySet="Messdaten" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="COPDModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Messdaten">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_MesstypID" Type="Int32" Nullable="false" />
+          <Property Name="FK_PatientID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Patienten" Relationship="Self.FK_Messdaten_Patienten" FromRole="Messdaten" ToRole="Patienten" />
+          <NavigationProperty Name="Messtypen" Relationship="Self.FK_Table_Messtypen" FromRole="Messdaten" ToRole="Messtypen" />
+        </EntityType>
+        <EntityType Name="Messtypen">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TypName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Messdaten" Relationship="Self.FK_Table_Messtypen" FromRole="Messtypen" ToRole="Messdaten" />
+          <Property Name="Zeitintervall" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Patienten">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Vorname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Nachname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Geburtsdatum" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Messdaten" Relationship="Self.FK_Messdaten_Patienten" FromRole="Patienten" ToRole="Messdaten" />
+        </EntityType>
+        <Association Name="FK_Messdaten_Patienten">
+          <End Role="Patienten" Type="Self.Patienten" Multiplicity="1" />
+          <End Role="Messdaten" Type="Self.Messdaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patienten">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Messdaten">
+              <PropertyRef Name="FK_PatientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Table_Messtypen">
+          <End Role="Messtypen" Type="Self.Messtypen" Multiplicity="1" />
+          <End Role="Messdaten" Type="Self.Messdaten" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Messtypen">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Messdaten">
+              <PropertyRef Name="FK_MesstypID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="COPDEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Messdaten" EntityType="Self.Messdaten" />
+          <EntitySet Name="Messtypen" EntityType="Self.Messtypen" />
+          <EntitySet Name="Patienten" EntityType="Self.Patienten" />
+          <AssociationSet Name="FK_Messdaten_Patienten" Association="Self.FK_Messdaten_Patienten">
+            <End Role="Patienten" EntitySet="Patienten" />
+            <End Role="Messdaten" EntitySet="Messdaten" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Table_Messtypen" Association="Self.FK_Table_Messtypen">
+            <End Role="Messtypen" EntitySet="Messtypen" />
+            <End Role="Messdaten" EntitySet="Messdaten" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="COPDModelStoreContainer" CdmEntityContainer="COPDEntities">
+          <EntitySetMapping Name="Messdaten">
+            <EntityTypeMapping TypeName="COPDModel.Messdaten">
+              <MappingFragment StoreEntitySet="Messdaten">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FK_MesstypID" ColumnName="FK_MesstypID" />
+                <ScalarProperty Name="FK_PatientID" ColumnName="FK_PatientID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Messtypen">
+            <EntityTypeMapping TypeName="COPDModel.Messtypen">
+              <MappingFragment StoreEntitySet="Messtypen">
+                <ScalarProperty Name="Zeitintervall" ColumnName="Zeitintervall" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="TypName" ColumnName="TypName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Patienten">
+            <EntityTypeMapping TypeName="COPDModel.Patienten">
+              <MappingFragment StoreEntitySet="Patienten">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Vorname" ColumnName="Vorname" />
+                <ScalarProperty Name="Nachname" ColumnName="Nachname" />
+                <ScalarProperty Name="Geburtsdatum" ColumnName="Geburtsdatum" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Kein" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
