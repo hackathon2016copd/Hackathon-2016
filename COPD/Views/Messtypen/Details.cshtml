@@ -1,0 +1,34 @@
+﻿@model COPD.Messtypen
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Messtypen</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TypName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TypName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Zeitintervall)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Zeitintervall)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
